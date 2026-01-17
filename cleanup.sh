@@ -8,5 +8,8 @@ gh release list | awk '{print $1}' | while read -r line; do gh release delete -y
 git tag -d $(git tag -l)
 git push origin --delete $(git tag -l)
 
-# Reset the repository to its initial commit
-git reset --hard $(git rev-list --max-parents=0 HEAD)
+# Reset the master branch to match the starter branch
+git checkout starter
+git branch -D master || true
+git checkout -b master
+git push -f origin master
