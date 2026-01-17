@@ -4,6 +4,7 @@
 uv = "0.9.18"
 lefthook = "2.0.12"
 dprint = "0.50.1"
+gh = "2.85.0"
 "pipx:git+https://github.com/hotdog-werx/releez.git" = "feature/support-branch-releases"
 
 [settings]
