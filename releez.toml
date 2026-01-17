@@ -1,0 +1,10 @@
+create-pr = true
+alias-versions = "major"
+hooks = { changelog-format = [
+    "mise",
+    "exec",
+    "--",
+    "poe",
+    "format-dprint",
+    "{changelog}",
+] }

@@ -1,0 +1,11 @@
+[env]
+
+[tools]
+uv = "0.9.18"
+lefthook = "2.0.12"
+dprint = "0.50.1"
+"pipx:git+https://github.com/hotdog-werx/releez.git" = "feature/support-branch-releases"
+
+[settings]
+experimental = true
+python.uv_venv_auto = true
