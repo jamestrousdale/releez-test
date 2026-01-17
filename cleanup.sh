@@ -6,7 +6,7 @@ gh release list | awk '{print $1}' | while read -r line; do gh release delete -y
 
 # Delete all tags locally and remotely
 git tag -d $(git tag -l)
-git push origin --delete $(git tag -l)
+git push origin --delete $(git tag -l) || true
 
 # Reset the master branch to match the starter branch
 git checkout starter
