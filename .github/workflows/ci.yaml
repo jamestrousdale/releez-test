@@ -48,8 +48,11 @@ jobs:
           DOCKER_VERSIONS: ${{ steps.releez.outputs.docker-versions }}
           PEP440_VERSIONS: ${{ steps.releez.outputs.pep440-versions }}
         run: |
-          echo "release-version: ${{ steps.releez.outputs.release-version }}"
-          echo "project:         ${{ steps.releez.outputs.project }}"
+          RELEASE_VERSION="${{ steps.releez.outputs.release-version }}"
+          PROJECT="${{ steps.releez.outputs.project }}"
+
+          echo "release-version: $RELEASE_VERSION"
+          echo "project:         $PROJECT"
           echo ""
           echo "semver-versions:"
           echo "$SEMVER_VERSIONS" | sed 's/^/  /'
@@ -57,3 +60,13 @@ jobs:
           echo "$DOCKER_VERSIONS" | sed 's/^/  /'
           echo "pep440-versions:"
           echo "$PEP440_VERSIONS" | sed 's/^/  /'
+
+          SEMVER_EXACT=$(echo "$SEMVER_VERSIONS" | head -1)
+          DOCKER_EXACT=$(echo "$DOCKER_VERSIONS" | head -1)
+          PEP440_EXACT=$(echo "$PEP440_VERSIONS" | head -1)
+
+          PROJECT_LABEL="${PROJECT:+$PROJECT }${RELEASE_VERSION}"
+          echo "::notice title=Release version::${PROJECT_LABEL}"
+          echo "::notice title=semver::${SEMVER_EXACT}"
+          echo "::notice title=docker::${DOCKER_EXACT}"
+          echo "::notice title=pep440::${PEP440_EXACT}"
