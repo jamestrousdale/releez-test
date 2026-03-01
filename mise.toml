@@ -2,7 +2,7 @@
 uv = "latest"
 git-cliff = "latest"
 gh = "latest"
-"pipx:git+https://github.com/hotdog-werx/releez.git@feature/monorepo-support" = "latest"
+"pipx:git+https://github.com/hotdog-werx/releez.git" = "feature/monorepo-support"
 
 [settings]
 experimental = true
