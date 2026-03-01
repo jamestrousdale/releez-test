@@ -1,0 +1,17 @@
+[tool.releez]
+base-branch = "main"
+create-pr = true
+
+[[tool.releez.projects]]
+name = "core"
+path = "packages/core"
+tag-prefix = "core-"
+changelog-path = "CHANGELOG.md"
+
+[[tool.releez.projects]]
+name = "ui"
+path = "packages/ui"
+tag-prefix = "ui-"
+changelog-path = "CHANGELOG.md"
+# Uncomment to have ui track core changes (e.g. if ui depends on core):
+# include-paths = ["packages/core"]

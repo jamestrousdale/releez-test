@@ -1,0 +1,36 @@
+name: Finalize release
+
+on:
+  pull_request:
+    types:
+      - closed
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    name: Finalize release
+    runs-on: ubuntu-latest
+    if: >
+      github.event.pull_request.merged == true &&
+      startsWith(github.event.pull_request.head.ref, 'release/')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Finalize release
+        id: releez
+        uses: hotdog-werx/releez@feature/monorepo-support
+        with:
+          mode: finalize
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.releez.outputs.release-version }}
+          name: '${{ steps.releez.outputs.project }} ${{ steps.releez.outputs.semver-version }}'
+          body: ${{ steps.releez.outputs.release-notes }}

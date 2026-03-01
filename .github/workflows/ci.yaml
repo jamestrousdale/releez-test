@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  version-artifact:
+    name: Detect release version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Set prerelease params
+        id: params
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "prerelease-type=beta" >> "$GITHUB_OUTPUT"
+            echo "prerelease-number=${{ github.event.pull_request.number }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "prerelease-type=rc" >> "$GITHUB_OUTPUT"
+            echo "prerelease-number=0" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Detect version artifact
+        id: releez
+        uses: hotdog-werx/releez@feature/monorepo-support
+        with:
+          mode: version-artifact
+          is-full-release: 'false'
+          prerelease-type: ${{ steps.params.outputs.prerelease-type }}
+          prerelease-number: ${{ steps.params.outputs.prerelease-number }}
+          build-number: ${{ github.run_number }}
+
+      - name: Print outputs
+        env:
+          SEMVER_VERSIONS: ${{ steps.releez.outputs.semver-versions }}
+          DOCKER_VERSIONS: ${{ steps.releez.outputs.docker-versions }}
+          PEP440_VERSIONS: ${{ steps.releez.outputs.pep440-versions }}
+        run: |
+          echo "release-version: ${{ steps.releez.outputs.release-version }}"
+          echo "project:         ${{ steps.releez.outputs.project }}"
+          echo ""
+          echo "semver-versions:"
+          echo "$SEMVER_VERSIONS" | sed 's/^/  /'
+          echo "docker-versions:"
+          echo "$DOCKER_VERSIONS" | sed 's/^/  /'
+          echo "pep440-versions:"
+          echo "$PEP440_VERSIONS" | sed 's/^/  /'
