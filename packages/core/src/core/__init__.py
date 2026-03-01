@@ -3,3 +3,6 @@ def hello() -> str:
 
 def process(value: str) -> str:
     return value.strip()
+
+def validate(value: str) -> bool:
+    return bool(value)
